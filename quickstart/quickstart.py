@@ -17,7 +17,7 @@ def main():
     # the file token.json stores the user's access and refresh tokens, and is 
     # created automatically when the authorization flow completes for the first time
 
-    if os.path.exists('token.json'):
+    if os.path.exists('../creds/token.json'):
         creds = Credentials.from_authorized_user_file('token.json', SCOPES)
 
     # if there are no (valid) credentials, ask the user to login
@@ -26,9 +26,9 @@ def main():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                    'credentials.json', SCOPES)
+                    '../creds/credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
-        with open('token.json', 'w') as token:
+        with open('../creds/token.json', 'w') as token:
             token.write(creds.to_json())
 
     service = build('drive', 'v3', credentials=creds)
