@@ -22,7 +22,7 @@ def build_service():
     # created automatically when the authorization flow completes for the first time
 
     if os.path.exists('../creds/token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+        creds = Credentials.from_authorized_user_file('../creds/token.json', SCOPES)
 
     # if there are no (valid) credentials, ask the user to login
     if not creds or not creds.valid:

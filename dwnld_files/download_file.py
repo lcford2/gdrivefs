@@ -24,7 +24,7 @@ def build_service():
     # created automatically when the authorization flow completes for the first time
 
     if os.path.exists('../creds/token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+        creds = Credentials.from_authorized_user_file('../creds/token.json', SCOPES)
 
     # if there are no (valid) credentials, ask the user to login
     if not creds or not creds.valid:
@@ -41,7 +41,7 @@ def build_service():
     return service
 
 
-def download_file(service, file_idi, file_name=None):
+def download_file(service, file_id, file_name=None):
     """Use service.files().get_media to download non-google workspace files
 
     :param service: Service built with `build_service`
@@ -89,4 +89,3 @@ def download_files(service, file_ids):
 if __name__ == '__main__':
     service = build_service()
     file_name = download_file(service, "<input file id here>")
-    
