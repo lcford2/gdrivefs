@@ -22,7 +22,7 @@ def build_service():
 
     # the file token.json stores the user's access and refresh tokens, and is 
     # created automatically when the authorization flow completes for the first time
-
+    
     if os.path.exists('../creds/token.json'):
         creds = Credentials.from_authorized_user_file('../creds/token.json', SCOPES)
 
@@ -52,7 +52,7 @@ def download_file(service, file_id, file_name=None):
     :rtype: str
     """
     # Setup request for the file
-    request = service.files().get_media(fileId=file_id)
+    request = service.files().get_media(fileId=file_id, supportsAllDrives=True)
     # setup the file handler to recieve the byte stream
     fh = io.BytesIO()
 
@@ -69,7 +69,9 @@ def download_file(service, file_id, file_name=None):
     # get file name meta data to store file with same name, 
     # only executed if user did not provide a file name to store the file locally
     if file_name == None:
-        file_name_results = service.files().get(fileId=file_id, fields='name').execute()
+        file_name_results = service.files().get(fileId=file_id,
+                                                fields='name', 
+                                                supportsAllDrives=True).execute()
         file_name = file_name_results['name']
     # copy stream from file handler to local storage
     with open(file_name, 'wb') as f:
@@ -77,15 +79,18 @@ def download_file(service, file_id, file_name=None):
     
     return file_name
 
-def download_files(service, file_ids):
-    dwnloaded_files = []
-    for file_id in file_ids:
-        file_name = download_file(service, file_id)
-        dwnloaded_files.append(file_name)
-    return dwnloaded_files
-    
-
-    
+def download_files(service, file_ids, file_names=None):
+    if file_names:
+        for file_id, file_name in zip(file_ids, file_names):
+            file_name = download_file(service, file_id, file_name)
+        return file_names
+    else:
+        dwnlded_files = []
+        for file_id in file_ids:
+            file_name = download_file(service, file_id)
+            dwnlded_files.append(file_name)
+        return dwnlded_files
+        
 if __name__ == '__main__':
     service = build_service()
     file_name = download_file(service, "<input file id here>")
